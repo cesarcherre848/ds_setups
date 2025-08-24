@@ -1,0 +1,75 @@
+services:
+  tf-gpu-dl:
+    build:
+      context: ./dockerfiles/2.15-gpu
+      dockerfile: Dockerfile
+    container_name: tf-gpu-dl
+    image: tf-gpu-dl:2.15-gpu
+    runtime: nvidia
+    stdin_open: true
+    tty: true
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - TF_FORCE_GPU_ALLOW_GROWTH=true
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - ./libraries/dl-base/requirements.txt:/tmp/requirements.txt
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    working_dir: /app
+    command: >
+      sh -c "pip install --no-cache-dir -r /tmp/requirements.txt && bash"
+
+  tf-gpu-rl:
+    build:
+      context: ./dockerfiles/2.15-gpu
+      dockerfile: Dockerfile
+    container_name: tf-gpu-rl
+    image: tf-gpu-rl:2.15-gpu
+    runtime: nvidia
+    stdin_open: true
+    tty: true
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - TF_FORCE_GPU_ALLOW_GROWTH=true
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - ./libraries/rl-base/requirements.txt:/tmp/requirements.txt
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    working_dir: /app
+    command: >
+      sh -c "pip install --no-cache-dir -r /tmp/requirements.txt && bash"
+
+  tf-cpu-dl:
+    build:
+      context: ./dockerfiles/2.15-cpu
+      dockerfile: Dockerfile
+    container_name: tf-cpu-dl
+    image: tf-cpu-dl:2.15-cpu
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./libraries/dl-base/requirements.txt:/tmp/requirements.txt
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    working_dir: /app
+    command: >
+      sh -c "pip install --no-cache-dir -r /tmp/requirements.txt && bash"
+
+  tf-cpu-rl:
+    build:
+      context: ./dockerfiles/2.15-cpu
+      dockerfile: Dockerfile
+    container_name: tf-cpu-rl
+    image: tf-cpu-rl:2.15-cpu
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./libraries/rl-base/requirements.txt:/tmp/requirements.txt
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    working_dir: /app
+    command: >
+      sh -c "pip install --no-cache-dir -r /tmp/requirements.txt && bash"
+  
+  
+  
